@@ -1,0 +1,4 @@
+{
+  "files": ["./client/**/*.{html,htm,css,js}"],
+  "server": { "baseDir": "./client" }
+}

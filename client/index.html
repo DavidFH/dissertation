@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+
+<html>
+  
+<head>
+  <meta charset="utf-8">
+  <meta content="Display Webcam Stream" name="title">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" type="text/css" href="./public/css/style.css">
+</head>
+  
+<body style="overflow: hidden;">
+  
+  <!-- Header Elements -->
+  <header id="header">
+    <!-- Settings Dropdown-->
+    <div class="dropdown topLeft">
+      <button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+        Settings
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+        <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="Wikipedia" id="wiki" class="dropDownBox" /><label for="wiki" class="dropDownLine">Wikipedia</label></li>
+        <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="New York Times" id="nyt"class="dropDownBox" /><label for="nyt" class="dropDownLine">New York Times</label></li>
+        <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="Ebay" id="ebay"class="dropDownBox" /><label for="ebay" class="dropDownLine">Ebay</label></li>
+        <li role="separator" class="divider"></li>
+        <li><a href="#">Portfolio...</a></li>
+      </ul>
+    </div>
+    <div class="topRight">
+      <!-- Start Stream -->
+      <button id="start" class="btn btn-success" type="button" onclick="startStream()">
+        <span class="glyphicon glyphicon-play"></span>
+      </button>
+      <!-- Stop Stream -->
+      <button id="stop" class="btn btn-danger disabled" type="button" onclick="stopStream()">
+        <span class="glyphicon glyphicon-stop"></span>   
+      </button>
+    </div>
+  </header>
+  
+  <!-- Footer Elements -->
+  <footer id="footer">
+  </footer>
+  
+  <!-- Hidden Elements -->
+  <section id="container">
+    <!-- Results Panels Left-->
+    <section id="resultsLeft">
+      <!-- Ebay -->
+      <div id ="ebayResults" class="panel panel-default hide">
+        <div id="ebayHeading" class="panel-heading">
+          Ebay
+          <span class="glyphicon glyphicon-remove pull-right" onclick="closePanel('ebayResults')"></span>
+        </div>
+        <div id="ebayBody" class="panel-body">
+        </div>
+      </div> 
+    </section>
+    <!-- Results Panels Right -->
+    <section id="resultsRight">
+      <!-- Wikipedia -->
+      <div id ="wikipediaResults" class="panel panel-default hide">
+        <div  id="wikipediaHeading" class="panel-heading">
+        </div>
+        <div id="wikipediaBody" class="panel-body">
+        </div>
+        <div id="wikipediaFooter" class="panel-footer">
+        </div>
+      </div>
+      <!-- NYT --> 
+      <div id ="timesResults" class="panel panel-default hide">
+        <div id="timesHeading" class="panel-heading">
+          New York Times
+          <span class="glyphicon glyphicon-remove pull-right" onclick="closePanel('timesResults')">
+        </div>
+        <div id="timesBody" class="panel-body">          
+        </div>
+      </div>
+    </section>
+    <!-- Modal -->
+    <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">No APIs</h4>
+          </div>
+          <div class="modal-body">
+            <p>No APIs have been selected. APIs are selected within the settings menu.</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Image Elements -->
+    <canvas id="canvas" class="hide"></canvas>
+    <img id="img" class="hide" />
+  </section>
+  
+  <!--Scripts -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="./public/js/main.js" type="text/javascript"></script>
+</body>
+
+</html>
