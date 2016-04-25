@@ -76,3 +76,25 @@
   overflow-y: scroll;
   overflow-x: hidden;
 }
+
+#notSupported {
+	min-height: 100%;
+	height: 100vh;
+	width: 100%;
+}
+
+#notSupportedPanel {
+	width: 400px;
+	height: 150px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+	margin: auto;
+}
+
+#canvas {
+	height: 100vh;
+	width: 100%;
+}

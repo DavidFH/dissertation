@@ -2,12 +2,20 @@ var header = document.getElementById("header");
 var start = document.getElementById("start");
 var stop = document.getElementById("stop");
 var canvas = document.getElementById("canvas");
+var context = canvas.getContext('2d');
 var container = document.getElementById("container");
+var notSupportedElement = document.getElementById("notSupported");
+var imagePicker = document.getElementById("imagePicker");
 var footer = document.getElementById('footer');
 var streamReference;
 
+// event listener for upload
+imagePicker.addEventListener("change", uploadImage, false);
+
+// start video stream
 function startStream () {
-  if (navigator.mediaDevices.getUserMedia) {
+  if (navigator.mediaDevices) {
+    if (navigator.mediaDevices.getUserMedia) {
     var p = navigator.mediaDevices.getUserMedia({ audio: false, video: true });
       p.then(function(stream) {
       var video = createVideo();
@@ -19,6 +27,9 @@ function startStream () {
     p.catch(function (err) { console.log(err) });
   } else {
     getMediaFallback();
+    }
+  } else {
+    getMediaFallback();
   }
 };
 
@@ -26,7 +37,7 @@ function startStream () {
 function getMediaFallback () {
   navigator.getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia || navigator.msGetUserMedia;
   window.URL = window.URL || window.webkitURL || window.mozURL || window.msURL;
-  if (navigator.getUserMedia) {
+  if (navigator.getUserMedia != undefined) {
     navigator.getUserMedia({video: true, audio: false}, function (stream) {
       var video = createVideo();
       if (video.mozSrcObject !== undefined) {
@@ -42,10 +53,11 @@ function getMediaFallback () {
         console.log(err);
     });
   } else {
-    console.log('Native device media streaming (getUserMedia) not supported in this browser.');
+    notSupported();
   }
 }
 
+// create video element
 function createVideo () {
   var video = document.createElement("video");
   setAttributes(video, {"id": "video", "autoplay": true, "height": "100%", "width": "100%", "onclick": "takePicture()"});
@@ -53,45 +65,72 @@ function createVideo () {
   return document.getElementById('video');
 }
 
-
+// stop video steam
 function stopStream () {
   streamReference.stop();
   start.classList.remove("disabled");
   stop.classList.add("disabled");
 }
 
-// finish this!!!
+// show not supported panel
 function notSupported () {
-  
+	notSupportedElement.classList.remove("hide");
 }
 
-function stopped () {
-  
+// upload file input
+function uploadImage () {
+	canvas.width = window.innerWidth;
+	canvas.height = window.innerHeight;
+	if ( this.files && this.files[0] ) {
+  	var fileReader = new FileReader();
+    fileReader.onload = function(e) {
+    	var image = new Image();
+      image.onload = function() {
+      	context.drawImage(image, 0, 0, image.width, image.height);
+				document.querySelector('img').src = canvas.toDataURL('image/jpeg');
+    		var base64 = document.querySelector('img').src;
+				console.log(base64);
+				makeRequest("POST", "http://localhost:3333/tagImage", base64, function (result) {
+					createCarousel(result);
+    		});
+    	};
+  		image.src = e.target.result;
+    };       
+    fileReader.readAsDataURL( this.files[0] );
+		canvas.classList.remove("hide");
+		notSupportedElement.classList.add("hide");
+	}
 }
 
+// take picture from stream
 function takePicture () {
   if (document.getElementById("video")) {
-    var ctx = canvas.getContext('2d');
-    ctx.drawImage(video, 0, 0, 400, 300);
+    context.drawImage(video, 0, 0, 250, 150);
     document.querySelector('img').src = canvas.toDataURL('image/jpeg');
     var base64 = document.querySelector('img').src;
-    
+		console.log(base64);    
     makeRequest("POST", "http://localhost:3333/tagImage", base64, function (result) {
-      footer.innerHTML = "";
-      var carousel = '<div id="text-carousel" class="carousel slide" data-ride="carousel"><div class="row"><div class="col-xs-offset-3 col-xs-6"><div class="carousel-inner">'
-      result.forEach(function (tag, index) {
-        if (index == 0) {
-          carousel += '<div class="item active"><div class="carousel-content"><div><button class="btn" onclick="uploadTag(this.innerHTML)">'+tag+'</button></div></div></div>';
-        }
-        carousel += '<div class="item"><div class="carousel-content"><div><button class="btn" onclick="uploadTag(this.innerHTML)">'+tag+'</button></div></div></div>'; 
-      })
-      carousel += '</div></div></div><a class="left carousel-control" href="#text-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a><a class="right carousel-control" href="#text-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a></div>';
-      footer.innerHTML = carousel;
-      $('#text-carousel').carousel();
+			createCarousel(result);
     });
   }
 }
 
+// create tag carousel
+function createCarousel (result) {
+	footer.innerHTML = "";
+	var carousel = '<div id="text-carousel" class="carousel slide" data-ride="carousel"><div class="row"><div class="col-xs-offset-3 col-xs-6"><div class="carousel-inner">'
+  result.forEach(function (tag, index) {
+  	if (index == 0) {
+    	carousel += '<div class="item active"><div class="carousel-content"><div><button class="btn" onclick="uploadTag(this.innerHTML)">'+tag+'</button></div></div></div>';
+    }
+    carousel += '<div class="item"><div class="carousel-content"><div><button class="btn" onclick="uploadTag(this.innerHTML)">'+tag+'</button></div></div></div>'; 
+	})
+  carousel += '</div></div></div><a class="left carousel-control" href="#text-carousel" data-slide="prev"><span class="glyphicon glyphicon-chevron-left"></span></a><a class="right carousel-control" href="#text-carousel" data-slide="next"><span class="glyphicon glyphicon-chevron-right"></span></a></div>';
+  footer.innerHTML = carousel;
+  $('#text-carousel').carousel();
+}
+
+// send choosen tag to server
 function uploadTag (tag) {
   if (document.getElementById("wiki").checked || document.getElementById("nyt").checked || document.getElementById("ebay").checked) {
     // Set Up Params
@@ -171,6 +210,7 @@ function ebayDisplay (data) {
   }
 }
 
+// close Panels
 function closePanel (id) {
   var panel = document.getElementById(id);
   panel.classList.add("hide");

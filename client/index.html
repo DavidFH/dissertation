@@ -5,6 +5,7 @@
 <head>
   <meta charset="utf-8">
   <meta content="Display Webcam Stream" name="title">
+	<title>Dissertation - AR</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
   <link rel="stylesheet" type="text/css" href="./public/css/style.css">
@@ -22,10 +23,8 @@
       </button>
       <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
         <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="Wikipedia" id="wiki" class="dropDownBox" /><label for="wiki" class="dropDownLine">Wikipedia</label></li>
-        <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="New York Times" id="nyt"class="dropDownBox" /><label for="nyt" class="dropDownLine">New York Times</label></li>
-        <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="Ebay" id="ebay"class="dropDownBox" /><label for="ebay" class="dropDownLine">Ebay</label></li>
-        <li role="separator" class="divider"></li>
-        <li><a href="#">Portfolio...</a></li>
+        <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="New York Times" id="nyt" class="dropDownBox" /><label for="nyt" class="dropDownLine">New York Times</label></li>
+        <li>&nbsp;&nbsp;&nbsp;<input type="checkbox" value="Ebay" id="ebay" class="dropDownBox" /><label for="ebay" class="dropDownLine">Ebay</label></li>
       </ul>
     </div>
     <div class="topRight">
@@ -44,10 +43,21 @@
   <footer id="footer">
   </footer>
   
-  <!-- Hidden Elements -->
-  <section id="container">
+  <!-- Main Content -->
+  <div id="container">
+		<div id="notSupported" class="hide">
+			<div id="notSupportedPanel" class="panel panel-danger">
+				<div class="panel-heading">
+					Not Supported
+				</div>
+  			<div class="panel-body">
+    			<p>Your browser is currently not supported, upload an image instead?</p>
+					<input id="imagePicker" type="file" accept="image/*" />
+  			</div>
+			</div>
+		</div>
     <!-- Results Panels Left-->
-    <section id="resultsLeft">
+    <div id="resultsLeft">
       <!-- Ebay -->
       <div id ="ebayResults" class="panel panel-default hide">
         <div id="ebayHeading" class="panel-heading">
@@ -57,9 +67,9 @@
         <div id="ebayBody" class="panel-body">
         </div>
       </div> 
-    </section>
+    </div>
     <!-- Results Panels Right -->
-    <section id="resultsRight">
+    <div id="resultsRight">
       <!-- Wikipedia -->
       <div id ="wikipediaResults" class="panel panel-default hide">
         <div  id="wikipediaHeading" class="panel-heading">
@@ -73,12 +83,12 @@
       <div id ="timesResults" class="panel panel-default hide">
         <div id="timesHeading" class="panel-heading">
           New York Times
-          <span class="glyphicon glyphicon-remove pull-right" onclick="closePanel('timesResults')">
+					<span class="glyphicon glyphicon-remove pull-right" onclick="closePanel('timesResults')" ></span>
         </div>
         <div id="timesBody" class="panel-body">          
         </div>
       </div>
-    </section>
+    </div>
     <!-- Modal -->
     <div id="myModal" class="modal fade" tabindex="-1" role="dialog">
       <div class="modal-dialog">
@@ -98,8 +108,8 @@
     </div>
     <!-- Image Elements -->
     <canvas id="canvas" class="hide"></canvas>
-    <img id="img" class="hide" />
-  </section>
+    <img id="img" src="#" class="hide" alt="webcamImage"/>
+  </div>
   
   <!--Scripts -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
